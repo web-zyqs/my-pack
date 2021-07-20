@@ -1,5 +1,5 @@
 ## 简介
-这是一个mini的js打包器，对js代码进行打包（目前只支持es module），支持插件和一小部分配置
+这是一个mini的js打包器，对js代码进行打包（目前只支持es module），支持loader和一小部分配置
 ## 安装
 `git clone` 本项目到本地
 在根目录下`npm link`(没发布到npm)
