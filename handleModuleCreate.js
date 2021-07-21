@@ -3,7 +3,7 @@ const path = require("path");
 const createModule = require("./createModule.js");
 
 //这个函数用于从入口文件开始分析，生成依赖图
-function createGraph(entry,rules) {
+function handleModuleCreate(entry,rules) {
   // 从入口文件开始
   const entryModule = createModule(entry,rules);
 
@@ -11,15 +11,15 @@ function createGraph(entry,rules) {
   const modules = [entryModule];
 
   // 遍历队列中的模块，刚开始只有一个模块，随后会添加进新的模块，然后继续遍历，直到剩余为空
-  for (const asset of modules) {
+  for (const module of modules) {
     // 模块的依赖
-    const { dependencies } = asset;
+    const { dependencies } = module;
 
     // 这个对象用于保存依赖的模块名字于id的映射关系，便于追踪
-    asset.mapping = {};
+    module.dependences = {};
 
     // 因为本地模块的依赖是相对于当前模块导入的，这步是得到当前模块的目录
-    const dirname = path.dirname(asset.filename);
+    const dirname = path.dirname(module.filename);
 
     // 遍历模块的依赖
     dependencies.forEach((relativePath) => {
@@ -29,15 +29,14 @@ function createGraph(entry,rules) {
       // 创建依赖的资源对象
       const child = createModule(absolutePath,rules);
 
-      // 将依赖对象的id添加到mapping对象上，方便后期查找
-      asset.mapping[relativePath] = child.id;
+      // 将依赖对象的id添加到dependences对象上，方便后期查找
+      module.dependences[relativePath] = child.id;
 
       // 最后，将依赖资源对象加入到队列中。
       modules.push(child);
     });
   }
-
   return modules;
 }
 
-module.exports = createGraph;
+module.exports = handleModuleCreate;

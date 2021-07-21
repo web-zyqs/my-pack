@@ -8,7 +8,7 @@ function bundle(graph) {
         function(require,module,exports){
           ${item.code}
         },
-        ${JSON.stringify(item.mapping)}
+        ${JSON.stringify(item.dependences)}
       ],
       `;
   });
@@ -18,10 +18,10 @@ function bundle(graph) {
     (function(modules){
       function require(id){
         // 第一个是模块代码，第二个是模块依赖
-        const [fn,mapping] = modules[id];
+        const [fn,dependences] = modules[id];
   
         function localRequire(name){
-          return require(mapping[name]);
+          return require(dependences[name]);
         }
   
         const module = { exports:{} };

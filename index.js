@@ -3,7 +3,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const createGraph = require("./createGraph.js");
+const handleModuleCreate = require("./handleModuleCreate.js");
 const bundle = require("./bundle.js");
 
 let config = {
@@ -28,7 +28,7 @@ const absEntry = path.resolve(process.cwd(), config.entry);
 const absOutputPath = path.resolve(process.cwd(), config.output.path);
 
 console.log("开始解析依赖，生成代码模块...");
-const graph = createGraph(absEntry, config.module.rules);
+const graph = handleModuleCreate(absEntry, config.module.rules);
 console.log("解析依赖完成...");
 
 console.log("根据依赖图，开始打包...");
