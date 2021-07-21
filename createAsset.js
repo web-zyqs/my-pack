@@ -18,15 +18,19 @@ function createAsset(filename, rules) {
     // 读取js文件内容，获取到文件'utf-8'编码的字符串
     content = fs.readFileSync(filename, "utf-8");
   } else {
-    // 读取非js文件内容,获取到文件的buffer实例
-    let bufferContent = fs.readFileSync(filename);
     //如果不是js文件则使用loader中的规则转化成js，然后才能使用babel进行parse
     for (let i = 0; i < rules.length; i++) {
       let rule = rules[i];
       //使用配置里面的test正则匹配文件名
       if (rule.test.test(filename)) {
+        // 读取非js文件内容,判断loader是否导出了属性，如果导出了raw属性则将文件读取为Buffer
         let loaderFunc = require(rule.use); //引入loader导出的函数
-        content = loaderFunc(bufferContent); //执行loader导出的函数，并传入参数
+        if (loaderFunc.raw) {
+          content = fs.readFileSync(filename);
+        } else {
+          content = fs.readFileSync(filename, "utf-8");
+        }
+        content = loaderFunc(content); //执行loader导出的函数，并传入参数
       }
     }
   }

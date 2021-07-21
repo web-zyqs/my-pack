@@ -9,3 +9,4 @@ function imgLoader(source) {
 }
 
 module.exports = imgLoader;
+module.exports.raw = true;
